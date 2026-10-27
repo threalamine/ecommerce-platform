@@ -16,7 +16,7 @@ class ProductController extends Controller
     public function index()
     {
         //
-        $products = Product::with('category')->latest()->paginate(15);
+        $products = Product::with('category', 'images')->latest()->paginate(15);
 
         return ProductResource::collection($products);
 
@@ -33,7 +33,7 @@ class ProductController extends Controller
             'slug' => Str::slug($request->name),
         ]);
 
-        return (new ProductResource($product->load('category')))
+        return (new ProductResource($product->load('category', 'images')))
             ->response()
             ->setStatusCode(201);
     }
@@ -44,7 +44,7 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         //
-        return new ProductResource($product->load('category'));
+        return new ProductResource($product->load('category', 'images'));
     }
 
     /**
@@ -58,7 +58,7 @@ class ProductController extends Controller
             'slug' => Str::slug($request->name),
         ]);
 
-        return new ProductResource($product->load('category'));
+        return new ProductResource($product->load('category', 'images'));
     }
 
     /**

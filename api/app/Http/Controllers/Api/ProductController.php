@@ -20,7 +20,7 @@ class ProductController extends Controller
         ];
         [$column, $direction] = $sorts[$request->query('sort')] ?? $sorts['newest'];
 
-        $products = Product::with('category')
+        $products = Product::with('category', 'images')
             ->where('is_active', true)
             ->when($request->query('q'), fn ($q, $search) => $q->where('name', 'like', "%{$search}%"))
             ->when($request->query('category'), fn ($q, $slug) => $q->whereHas('category', fn ($c) => $c->where('slug', $slug)))
@@ -35,7 +35,7 @@ class ProductController extends Controller
 
     public function show(string $slug)
     {
-        $product = Product::with('category')
+        $product = Product::with('category', 'images')
             ->where('is_active', true)
             ->where('slug', $slug)
             ->firstOrFail();
