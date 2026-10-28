@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
+import Footer from './components/Footer'
 import AdminRoute from './components/AdminRoute'
 import Catalog from './pages/Catalog'
 import ProductDetail from './pages/ProductDetail'
@@ -18,9 +19,9 @@ import AdminCategories from './pages/admin/AdminCategories'
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900">
+    <div className="flex min-h-screen flex-col">
       <Navbar />
-      <main className="mx-auto max-w-6xl px-4 py-8">
+      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
         <Routes>
           <Route path="/" element={<Catalog />} />
           <Route path="/products/:slug" element={<ProductDetail />} />
@@ -43,6 +44,7 @@ export default function App() {
           </Route>
         </Routes>
       </main>
+      <Footer />
     </div>
   )
 }

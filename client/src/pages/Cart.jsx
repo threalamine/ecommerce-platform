@@ -24,11 +24,13 @@ export default function Cart() {
     if (cart.items.length === 0) {
         return (
             <div>
-                <h1 className="mb-4 text-2xl font-bold">Your cart</h1>
-                <p className="mb-4 text-gray-600">Your cart is empty.</p>
-                <Link to="/" className="text-blue-600 underline">
-                    Continue shopping
-                </Link>
+                <h1 className="mb-6 text-2xl font-bold">Your cart</h1>
+                <div className="card p-10 text-center">
+                    <p className="mb-4 text-gray-600">Your cart is empty.</p>
+                    <Link to="/" className="btn btn-primary">
+                        Continue shopping
+                    </Link>
+                </div>
             </div>
         )
     }
@@ -37,59 +39,71 @@ export default function Cart() {
         <div>
             <h1 className="mb-6 text-2xl font-bold">Your cart</h1>
 
-            {error && <p className="mb-4 rounded bg-red-50 p-3 text-sm text-red-600">{error}</p>}
+            {error && <p className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-600">{error}</p>}
 
             <div className="space-y-4">
                 {cart.items.map((item) => (
-                    <div key={item.id} className="flex items-center gap-4 rounded-lg border bg-white p-4">
-                        <div className="h-20 w-20 shrink-0 overflow-hidden rounded bg-gray-100">
-                            {item.product.image && (
-                                <img
-                                    src={item.product.image}
-                                    alt={item.product.name}
-                                    className="h-full w-full object-cover"
-                                />
-                            )}
+                    <div key={item.id} className="card flex flex-col gap-4 p-4 sm:flex-row sm:items-center">
+                        {/* Product: image, name and unit price */}
+                        <div className="flex min-w-0 flex-1 items-center gap-4">
+                            <div className="h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                                {item.product.image && (
+                                    <img
+                                        src={item.product.image}
+                                        alt={item.product.name}
+                                        className="h-full w-full object-cover"
+                                    />
+                                )}
+                            </div>
+
+                            <div className="min-w-0">
+                                <Link
+                                    to={`/products/${item.product.slug}`}
+                                    className="font-semibold hover:text-brand-600"
+                                >
+                                    {item.product.name}
+                                </Link>
+                                <p className="text-sm text-gray-500">${item.product.price} each</p>
+                            </div>
                         </div>
 
-                        <div className="flex-1">
-                            <Link to={`/products/${item.product.slug}`} className="font-semibold underline">
-                                {item.product.name}
-                            </Link>
-                            <p className="text-sm text-gray-500">${item.product.price} each</p>
-                        </div>
+                        {/* Controls: quantity, line total and remove */}
+                        <div className="flex items-center justify-between gap-4 border-t pt-3 sm:justify-end sm:gap-6 sm:border-t-0 sm:pt-0">
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={() => handleQuantity(item, item.quantity - 1)}
+                                    disabled={item.quantity <= 1}
+                                    className="h-8 w-8 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 disabled:opacity-40"
+                                >
+                                    −
+                                </button>
+                                <span className="w-6 text-center">{item.quantity}</span>
+                                <button
+                                    onClick={() => handleQuantity(item, item.quantity + 1)}
+                                    className="h-8 w-8 rounded-lg border border-gray-300 bg-white hover:bg-gray-50"
+                                >
+                                    +
+                                </button>
+                            </div>
 
-                        <div className="flex items-center gap-2">
+                            <p className="min-w-16 text-right font-bold">${item.line_total}</p>
+
                             <button
-                                onClick={() => handleQuantity(item, item.quantity - 1)}
-                                disabled={item.quantity <= 1}
-                                className="h-8 w-8 rounded border disabled:opacity-40"
+                                onClick={() => removeItem(item.id)}
+                                className="text-sm font-medium text-red-600 hover:underline"
                             >
-                                −
-                            </button>
-                            <span className="w-6 text-center">{item.quantity}</span>
-                            <button
-                                onClick={() => handleQuantity(item, item.quantity + 1)}
-                                className="h-8 w-8 rounded border"
-                            >
-                                +
+                                Remove
                             </button>
                         </div>
-
-                        <p className="w-24 text-right font-bold">${item.line_total}</p>
-
-                        <button onClick={() => removeItem(item.id)} className="text-sm text-red-600 underline">
-                            Remove
-                        </button>
                     </div>
                 ))}
             </div>
 
-            <div className="mt-6 flex items-center justify-between rounded-lg border bg-white p-4">
+            <div className="card mt-6 flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-lg">
                     Total: <span className="font-bold">${cart.total}</span>
                 </p>
-                <Link to="/checkout" className="rounded bg-black px-6 py-3 text-white">
+                <Link to="/checkout" className="btn btn-primary w-full px-6 py-3 sm:w-auto">
                     Checkout
                 </Link>
             </div>
