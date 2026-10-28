@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Api\Admin\DashboardController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -45,6 +46,8 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function ()
     Route::get('orders', [AdminOrderController::class, 'index']);
     Route::get('orders/{order}', [AdminOrderController::class, 'show']);
     Route::put('orders/{order}/status', [AdminOrderController::class, 'updateStatus']);
+
+    Route::get('stats', [DashboardController::class, 'stats']);
 });
 
 Route::get('/categories', [CategoryController::class, 'index']);
