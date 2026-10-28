@@ -33,13 +33,13 @@ export default function Checkout() {
 
     if (cart.items.length === 0) {
         return (
-        <div>
-            <h1 className="mb-4 text-2xl font-bold">Checkout</h1>
-            <p className="mb-4 text-gray-600">Your cart is empty.</p>
-            <Link to="/" className="text-blue-600 underline">
-            Continue shopping
-            </Link>
-        </div>
+            <div>
+                <h1 className="mb-4 text-2xl font-bold">Checkout</h1>
+                <p className="mb-4 text-gray-600">Your cart is empty.</p>
+                <Link to="/" className="text-blue-600 underline">
+                    Continue shopping
+                </Link>
+            </div>
         )
     }
 
@@ -51,73 +51,73 @@ export default function Checkout() {
         setError(null)
 
         try {
-        // 1. Create the order from the cart
-        const orderRes = await client.post('/orders', form)
-        const orderId = orderRes.data.data.id
+            // 1. Create the order from the cart
+            const orderRes = await client.post('/orders', form)
+            const orderId = orderRes.data.data.id
 
-        // 2. Ask Laravel for the Stripe payment page
-        const payRes = await client.post(`/orders/${orderId}/checkout`)
+            // 2. Ask Laravel for the Stripe payment page
+            const payRes = await client.post(`/orders/${orderId}/checkout`)
 
-        // 3. Send the customer to Stripe
-        window.location.href = payRes.data.url
+            // 3. Send the customer to Stripe
+            window.location.href = payRes.data.url
         } catch (err) {
-        const data = err.response?.data
-        setError(data?.errors ? Object.values(data.errors)[0][0] : (data?.message ?? 'Something went wrong'))
-        setSubmitting(false)
+            const data = err.response?.data
+            setError(data?.errors ? Object.values(data.errors)[0][0] : (data?.message ?? 'Something went wrong'))
+            setSubmitting(false)
         }
     }
 
     return (
         <div>
-        <h1 className="mb-6 text-2xl font-bold">Checkout</h1>
+            <h1 className="mb-6 text-2xl font-bold">Checkout</h1>
 
-        <div className="grid gap-8 md:grid-cols-2">
-            <form onSubmit={handleSubmit} className="space-y-4">
-            <h2 className="text-lg font-semibold">Shipping details</h2>
+            <div className="grid gap-8 md:grid-cols-2">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <h2 className="text-lg font-semibold">Shipping details</h2>
 
-            {error && <p className="rounded bg-red-50 p-3 text-sm text-red-600">{error}</p>}
+                    {error && <p className="rounded bg-red-50 p-3 text-sm text-red-600">{error}</p>}
 
-            {fields.map((field) => (
-                <input
-                key={field.name}
-                type="text"
-                value={form[field.name]}
-                onChange={update(field.name)}
-                placeholder={field.label}
-                required
-                className="w-full rounded border bg-white px-3 py-2"
-                />
-            ))}
+                    {fields.map((field) => (
+                        <input
+                            key={field.name}
+                            type="text"
+                            value={form[field.name]}
+                            onChange={update(field.name)}
+                            placeholder={field.label}
+                            required
+                            className="w-full rounded border bg-white px-3 py-2"
+                        />
+                    ))}
 
-            <button
-                type="submit"
-                disabled={submitting}
-                className="w-full rounded bg-black px-4 py-3 text-white disabled:opacity-50"
-            >
-                {submitting ? 'Redirecting to payment...' : 'Place order and pay'}
-            </button>
-            </form>
+                    <button
+                        type="submit"
+                        disabled={submitting}
+                        className="w-full rounded bg-black px-4 py-3 text-white disabled:opacity-50"
+                    >
+                        {submitting ? 'Redirecting to payment...' : 'Place order and pay'}
+                    </button>
+                </form>
 
-            <div className="h-fit rounded-lg border bg-white p-4">
-            <h2 className="mb-4 text-lg font-semibold">Order summary</h2>
+                <div className="h-fit rounded-lg border bg-white p-4">
+                    <h2 className="mb-4 text-lg font-semibold">Order summary</h2>
 
-            <div className="space-y-2">
-                {cart.items.map((item) => (
-                <div key={item.id} className="flex justify-between text-sm">
-                    <span>
-                    {item.product.name} × {item.quantity}
-                    </span>
-                    <span>${item.line_total}</span>
+                    <div className="space-y-2">
+                        {cart.items.map((item) => (
+                            <div key={item.id} className="flex justify-between text-sm">
+                                <span>
+                                    {item.product.name} × {item.quantity}
+                                </span>
+                                <span>${item.line_total}</span>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="mt-4 flex justify-between border-t pt-4 font-bold">
+                        <span>Total</span>
+                        <span>${cart.total}</span>
+                    </div>
                 </div>
-                ))}
             </div>
-
-            <div className="mt-4 flex justify-between border-t pt-4 font-bold">
-                <span>Total</span>
-                <span>${cart.total}</span>
-            </div>
-            </div>
-        </div>
         </div>
     )
 }

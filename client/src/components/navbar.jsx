@@ -14,43 +14,48 @@ export default function Navbar() {
 
     return (
         <header className="border-b bg-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-            <Link to="/" className="text-xl font-bold">
-            MyShop
-            </Link>
+            <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+                <Link to="/" className="text-xl font-bold">
+                    MyShop
+                </Link>
 
-            <nav className="flex items-center gap-4 text-sm">
-            <Link to="/cart" className="relative underline">
-                Cart
-                {cart.items_count > 0 && (
-                <span className="ml-1 rounded-full bg-black px-2 py-0.5 text-xs text-white">
-                    {cart.items_count}
-                </span>
-                )}
-            </Link>
+                <nav className="flex items-center gap-4 text-sm">
+                    <Link to="/cart" className="relative underline">
+                        Cart
+                        {cart.items_count > 0 && (
+                            <span className="ml-1 rounded-full bg-black px-2 py-0.5 text-xs text-white">
+                                {cart.items_count}
+                            </span>
+                        )}
+                    </Link>
 
-            {user ? (
-                <>
-                <Link to="/orders" className="underline">
-                    My orders
-                </Link>
-                <span>Hi, {user.name}</span>
-                <button onClick={handleLogout} className="underline">
-                    Log out
-                </button>
-                </>
-            ) : (
-                <>
-                <Link to="/login" className="underline">
-                    Log in
-                </Link>
-                <Link to="/register" className="rounded bg-black px-3 py-1 text-white">
-                    Register
-                </Link>
-                </>
-            )}
-            </nav>
-        </div>
+                    {user ? (
+                        <>
+                            {user.role === 'admin' && (
+                                <Link to="/admin" className="font-semibold underline">
+                                    Admin
+                                </Link>
+                            )}
+                            <Link to="/orders" className="underline">
+                                My orders
+                            </Link>
+                            <span>Hi, {user.name}</span>
+                            <button onClick={handleLogout} className="underline">
+                                Log out
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <Link to="/login" className="underline">
+                                Log in
+                            </Link>
+                            <Link to="/register" className="rounded bg-black px-3 py-1 text-white">
+                                Register
+                            </Link>
+                        </>
+                    )}
+                </nav>
+            </div>
         </header>
     )
 }
