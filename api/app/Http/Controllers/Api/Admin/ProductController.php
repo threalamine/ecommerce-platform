@@ -6,28 +6,25 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        //
-        $products = Product::with('category', 'images')->latest()->paginate(15);
+        $products = Product::with('category', 'images')
+            ->when($request->query('q'), fn ($q, $search) => $q->where('name', 'like', "%{$search}%"))
+            ->latest()
+            ->paginate(15)
+            ->withQueryString();
 
         return ProductResource::collection($products);
-
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(ProductRequest $request)
     {
-        //
         $product = Product::create([
             ...$request->validated(),
             'slug' => Str::slug($request->name),
@@ -38,21 +35,13 @@ class ProductController extends Controller
             ->setStatusCode(201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Product $product)
     {
-        //
         return new ProductResource($product->load('category', 'images'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(ProductRequest $request, Product $product)
     {
-        //
         $product->update([
             ...$request->validated(),
             'slug' => Str::slug($request->name),
@@ -61,12 +50,10 @@ class ProductController extends Controller
         return new ProductResource($product->load('category', 'images'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Product $product)
     {
-        //
+        Storage::disk('public')->deleteDirectory("products/{$product->id}");
+
         $product->delete();
 
         return response()->noContent();
