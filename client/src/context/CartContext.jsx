@@ -20,6 +20,11 @@ export function CartProvider({ children }) {
         client.get('/cart').then((res) => setCart(res.data.data))
     }, [user])
 
+    const refreshCart = useCallback(async () => {
+        const res = await client.get('/cart')
+        setCart(res.data.data)
+    }, [])
+
     const addToCart = useCallback(async (productId, quantity = 1) => {
         const res = await client.post('/cart/items', {
         product_id: productId,
@@ -39,12 +44,14 @@ export function CartProvider({ children }) {
     }, [])
 
     return (
-        <CartContext.Provider value={{ cart, addToCart, updateQuantity, removeItem }}>
+        <CartContext.Provider
+        value={{ cart, refreshCart, addToCart, updateQuantity, removeItem }}
+        >
         {children}
         </CartContext.Provider>
     )
-    }
+}
 
-    export function useCart() {
+export function useCart() {
     return useContext(CartContext)
 }

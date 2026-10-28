@@ -89,9 +89,9 @@ export default function Cart() {
             <p className="text-lg">
             Total: <span className="font-bold">${cart.total}</span>
             </p>
-            <button disabled className="rounded bg-black px-6 py-3 text-white opacity-50">
-            Checkout (coming next)
-            </button>
+            <Link to="/checkout" className="rounded bg-black px-6 py-3 text-white">
+            Checkout
+            </Link>
         </div>
         </div>
     )
