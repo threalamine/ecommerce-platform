@@ -17,9 +17,12 @@ class CartController extends Controller
         return $request->user()->cart()->firstOrCreate();
     }
 
-    private function respond(Cart $cart): CartResource
+    private function respond(Cart $cart)
     {
-        return new CartResource($cart->load('items.product.images'));
+        // Always answer 200: without this, Laravel answers 201 when the cart was just created
+        return (new CartResource($cart->load('items.product.images')))
+            ->response()
+            ->setStatusCode(200);
     }
 
     public function show(Request $request)
