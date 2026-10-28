@@ -31,6 +31,9 @@ export default function Navbar() {
 
             {user ? (
                 <>
+                <Link to="/orders" className="underline">
+                    My orders
+                </Link>
                 <span>Hi, {user.name}</span>
                 <button onClick={handleLogout} className="underline">
                     Log out

@@ -15,6 +15,11 @@ class OrderResource extends JsonResource
             'total' => $this->total,
             'paid_at' => $this->paid_at,
             'created_at' => $this->created_at,
+            'customer' => $this->whenLoaded('user', fn () => [
+                'id' => $this->user->id,
+                'name' => $this->user->name,
+                'email' => $this->user->email,
+            ]),
             'shipping' => [
                 'name' => $this->shipping_name,
                 'phone' => $this->shipping_phone,

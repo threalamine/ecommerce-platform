@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\Admin\ProductImageController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\Admin\OrderController as AdminOrderController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -40,6 +41,10 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function ()
     
     Route::post('products/{product}/images', [ProductImageController::class, 'store']);
     Route::delete('products/{product}/images/{image}', [ProductImageController::class, 'destroy']);
+
+    Route::get('orders', [AdminOrderController::class, 'index']);
+    Route::get('orders/{order}', [AdminOrderController::class, 'show']);
+    Route::put('orders/{order}/status', [AdminOrderController::class, 'updateStatus']);
 });
 
 Route::get('/categories', [CategoryController::class, 'index']);
