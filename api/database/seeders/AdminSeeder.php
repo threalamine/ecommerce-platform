@@ -2,25 +2,22 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\User;
+use Illuminate\Database\Seeder;
 
 class AdminSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        //
+        // On a real server, set ADMIN_EMAIL and ADMIN_PASSWORD in the environment
+        // instead of keeping these defaults
         User::updateOrCreate(
-        ['email' => 'admin@shop.test'],
-        [
-            'name' => 'Admin',
-            'password' => 'Admin12345',
-            'role' => 'admin',
-        ]
-    );
+            ['email' => env('ADMIN_EMAIL', 'admin@shop.test')],
+            [
+                'name' => 'Admin',
+                'password' => env('ADMIN_PASSWORD', 'Admin12345'),
+                'role' => 'admin',
+            ],
+        );
     }
 }

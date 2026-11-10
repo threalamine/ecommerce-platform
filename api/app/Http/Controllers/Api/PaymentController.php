@@ -14,6 +14,9 @@ use Stripe\Webhook;
 
 class PaymentController extends Controller
 {
+    // Moroccan dirham, a two-decimal currency, so amounts are sent in centimes (price x 100)
+    private const CURRENCY = 'mad';
+
     public function checkout(Request $request, Order $order)
     {
         abort_if($order->user_id !== $request->user()->id, 404);
@@ -36,7 +39,7 @@ class PaymentController extends Controller
             'line_items' => $order->items->map(fn ($item) => [
                 'quantity' => $item->quantity,
                 'price_data' => [
-                    'currency' => 'usd',
+                    'currency' => self::CURRENCY,
                     'unit_amount' => (int) round($item->price * 100),
                     'product_data' => ['name' => $item->product_name],
                 ],
